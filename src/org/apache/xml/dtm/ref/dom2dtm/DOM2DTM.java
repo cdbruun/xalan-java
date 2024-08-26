@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 /*
- * $Id$
+ * $Id:$
  */
 package org.apache.xml.dtm.ref.dom2dtm;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.xml.transform.SourceLocator;
@@ -102,6 +103,7 @@ public class DOM2DTM extends DTMDefaultBaseIterators
    * single DTM Text node); this table points only to the first in
    * that sequence. */
   protected Vector m_nodes = new Vector();
+  protected HashMap<Object, Integer> m_nodeMap = null;
 
   /**
    * Construct a DOM2DTM object from a DOM node.
@@ -663,28 +665,38 @@ public class DOM2DTM extends DTMDefaultBaseIterators
    */
   private int getHandleFromNode(Node node)
   {
-    if (null != node)
-    {
-      int len = m_nodes.size();        
-      boolean isMore;
-      int i = 0;
-      do
-      {          
-        for (; i < len; i++)
-        {
-          if (m_nodes.elementAt(i) == node)
-            return makeNodeHandle(i);
-        }
+	  if (null != node)
+	  {
+		  if (null == m_nodeMap) {
+			  m_nodeMap = new HashMap<Object, Integer>(m_nodes.size());
 
-        isMore = nextNode();
-  
-        len = m_nodes.size();
-            
-      } 
-      while(isMore || i < len);
-    }
-    
-    return DTM.NULL;
+			  int len = m_nodes.size();        
+			  boolean isMore;
+			  int i = 0;
+			  do
+			  {          
+				  for (; i < len; i++)
+				  {
+					  m_nodeMap.put(m_nodes.elementAt(i), i);	
+					  //if (m_nodes.elementAt(i) == node)
+					  //  return makeNodeHandle(i);
+				  }
+
+				  isMore = nextNode();
+
+				  len = m_nodes.size();
+
+			  } 
+			  while(isMore || i < len);
+			  //System.out.println("DOM2DTM: created hashmap with " + m_nodeMap.size() + " entries");
+		  }
+		  Integer nodeid = m_nodeMap.get(node);
+		  if (null != nodeid) {
+			  return makeNodeHandle(nodeid);
+		  }
+	  }
+
+	  return DTM.NULL;
   }
 
   /** Get the handle from a Node. This is a more robust version of

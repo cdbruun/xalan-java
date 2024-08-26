@@ -410,16 +410,16 @@ public class ExtensionHandlerJavaClass extends ExtensionHandlerJava
       Throwable targetException = ite.getTargetException();
  
       if (targetException instanceof TransformerException)
-        throw ((TransformerException)targetException);
+        throw new TransformerContextException(exprContext,(TransformerException)targetException);
       else if (targetException != null)
         resultException = targetException;
             
-      throw new TransformerException(resultException);
+      throw new TransformerContextException(exprContext,resultException);
     }
     catch (Exception e)
     {
       // e.printStackTrace();
-      throw new TransformerException(e);
+      throw new TransformerContextException(exprContext,e);
     }
   }
 
