@@ -302,7 +302,7 @@ public class XSLProcessorContext
     }
     catch(org.xml.sax.SAXException se)
     {
-      throw new TransformerException(se);
+      throw new TransformerContextException(transformer, se);
     }
   }
 

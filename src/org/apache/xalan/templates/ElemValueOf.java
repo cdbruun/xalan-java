@@ -22,6 +22,7 @@ package org.apache.xalan.templates;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.xalan.extensions.TransformerContextException;
 import org.apache.xalan.res.XSLTErrorResources;
 import org.apache.xalan.transformer.TransformerImpl;
 import org.apache.xml.dtm.DTM;
@@ -287,10 +288,10 @@ public class ElemValueOf extends ElemTemplateElement
     }
     catch (SAXException se)
     {
-      throw new TransformerException(se);
+      throw new TransformerContextException(transformer, se);
     }
     catch (RuntimeException re) {
-    	TransformerException te = new TransformerException(re);
+    	TransformerException te = new TransformerContextException(transformer, re);
     	te.setLocator(this);
     	throw te;
     }

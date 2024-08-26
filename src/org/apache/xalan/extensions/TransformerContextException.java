@@ -47,6 +47,13 @@ public class TransformerContextException extends TransformerException {
          _xsltStack = TransformerContextException.xsltStackTrace(_exprContext);
      }
      
+     public TransformerContextException(TransformerImpl t, Throwable e) {
+         super(e.getMessage(), e);
+         _exprContext = null;
+         _xsltStack = TransformerContextException.xsltStackTrace(t);
+     }
+     
+     
      // The ExpressionContext is not really useful when you have left the transformation.
      // You can use it in the ErrorListener on the transform
      public ExpressionContext getExpressionContext() {
@@ -82,6 +89,18 @@ public class TransformerContextException extends TransformerException {
          StringBuilder st = new StringBuilder();
          try {
              TransformerImpl t = (TransformerImpl)ec.getXPathContext().getOwnerObject();
+             return xsltStackTrace(t);                         
+         } catch (Throwable e) {
+             // THIS MUST NEVER FAIL
+             
+         }
+         return st.toString();
+     }
+     
+     
+     public static String xsltStackTrace(TransformerImpl t) {
+         StringBuilder st = new StringBuilder();
+         try {           
                Vector cb = t.getElementCallstack();
                  for(int i=0; i<cb.size(); i++) {
                      /*if (i > 0) {
@@ -164,5 +183,6 @@ public class TransformerContextException extends TransformerException {
          }
          return st.toString();
      }
+     
      
 }

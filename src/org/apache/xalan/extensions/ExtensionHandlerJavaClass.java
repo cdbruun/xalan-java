@@ -492,7 +492,7 @@ public class ExtensionHandlerJavaClass extends ExtensionHandlerJava
       catch (Exception e)
       {
         // e.printStackTrace ();
-        throw new TransformerException (e.getMessage (), e);
+        throw new TransformerContextException (transformer, e);
       }
       putToCache(methodKey, null, null, m);
     }
@@ -523,15 +523,15 @@ public class ExtensionHandlerJavaClass extends ExtensionHandlerJava
       if (targetException instanceof TransformerException)
         throw (TransformerException)targetException;
       else if (targetException != null)
-        throw new TransformerException (targetException.getMessage (), 
+        throw new TransformerContextException (transformer, 
                 targetException);
       else
-        throw new TransformerException (e.getMessage (), e);
+        throw new TransformerContextException (transformer , e);
     }
     catch (Exception e)
     {
       // e.printStackTrace ();
-      throw new TransformerException (e.getMessage (), e);
+      throw new TransformerContextException (transformer, e);
     }
 
     if (result != null)
